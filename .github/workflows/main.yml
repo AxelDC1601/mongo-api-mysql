@@ -56,13 +56,13 @@ jobs:
 
       - name: Push API image
         run: |
-          docker tag api-image:1.0.0 ${{ secrets.DOCKER_USERNAME }}/mongo-api-mysql-api:1.0.0
-          docker push ${{ secrets.DOCKER_USERNAME }}/mongo-api-mysql-api:1.0.0
+          docker tag api-image:1.0.0 ${{ secrets.DOCKERHUB_USERNAME }}/mongo-api-mysql-api:1.0.0
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mongo-api-mysql-api:1.0.0
 
       - name: Push Mongo image
         run: |
-          docker tag mongo-image:1.0.0 ${{ secrets.DOCKER_USERNAME }}/mongo-api-mysql-mongo:1.0.0
-          docker push ${{ secrets.DOCKER_USERNAME }}/mongo-api-mysql-mongo:1.0.0
+          docker tag mongo-image:1.0.0 ${{ secrets.DOCKERHUB_USERNAME }}/mongo-api-mysql-mongo:1.0.0
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mongo-api-mysql-mongo:1.0.0
 
       - name: Stop containers
         if: always()
