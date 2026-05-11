@@ -23,19 +23,19 @@ jobs:
       - name: Docker Scout Scan API
         uses: docker/scout-action@v1
         with:
-          command: cves
+          command: cves, recommendation
           image: api-image:1.0.0
           file: ./api/Dockerfile
           only-severities: critical,high
           exit-code: false
 
       - name: Build Mongo image for scanning
-        run: docker build -t mongo-image:1.0.0 -f ./mongo/Dockerfile ./mongo
+        run: docker build -t mongo-image:1.0.0 -f ./Init/Dockerfile ./mongo
 
       - name: Docker Scout Scan Mongo
         uses: docker/scout-action@v1
         with:
-          command: cves
+          command: cves, recommendation
           image: mongo-image:1.0.0
           file: ./mongo/Dockerfile
           only-severities: critical,high
