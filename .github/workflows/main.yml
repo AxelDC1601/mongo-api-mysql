@@ -1,8 +1,6 @@
 name: Build and Test Application
 
-# Controls when the action will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
   pull_request:
@@ -10,7 +8,6 @@ on:
 
 jobs:
   build_test:
-    #The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     steps:
@@ -20,5 +17,63 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build image for scanning
-        run: docker build -t my-app:1.0.0 -f ./api/Dockerfile .
+      - name: Build API image for scanning
+        run: docker build -t api-image:1.0.0 -f ./api/Dockerfile ./api
+
+      - name: Docker Scout Scan API
+        uses: docker/scout-action@v1
+        with:
+          command: cves, recommendation
+          image: api-image:1.0.0
+          file: ./api/Dockerfile
+          only-severities: critical,high
+          exit-code: true
+
+      - name: Build Mongo image for scanning
+        run: docker build -t mongo-image:1.0.0 -f ./Init/Dockerfile ./mongo
+
+      - name: Docker Scout Scan Mongo
+        uses: docker/scout-action@v1
+        with:
+          command: cves, recommendation
+          image: mongo-image:1.0.0
+          file: ./mongo/Dockerfile
+          only-severities: critical,high
+          exit-code: true
+
+      - name: Create .env file
+        run: cp .env.example .env
+
+      - name: Build the stack
+        run: docker compose up -d
+
+      - name: Wait for services
+        run: sleep 30
+
+      - name: Show containers status
+        run: docker compose ps
+
+      - name: Test users route
+        run: curl -f http://localhost:8000/users
+
+      - name: Test posts route
+        run: curl -f http://localhost:8000/posts
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Tag API image
+        run: docker tag api-image:1.0.0 ${{ secrets.DOCKERHUB_USERNAME }}/mongo-api-mysql-api:latest
+
+      - name: Tag Mongo image
+        run: docker tag mongo-image:1.0.0 ${{ secrets.DOCKERHUB_USERNAME }}/mongo-api-mysql-mongo:latest
+
+      - name: Push API image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/mongo-api-mysql-api:latest
+
+      - name: Push Mongo image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/mongo-api-mysql-mongo:latest
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down -v
