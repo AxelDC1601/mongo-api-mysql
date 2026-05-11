@@ -22,6 +22,7 @@ do
   fi
 done
 
+
 echo "Vérification finale :"
 docker compose ps
 
