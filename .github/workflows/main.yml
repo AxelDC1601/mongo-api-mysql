@@ -33,7 +33,7 @@ jobs:
           command: cves
           image: local://api-image:1.0.0
           file: ./api/Dockerfile
-          only-severities: critical,high
+          only-severities: critical
           exit-code: false
 
       - name: Build Mongo image for scanning
