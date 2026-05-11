@@ -14,8 +14,8 @@ services:
       test: ["CMD-SHELL", "mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --database=$$MYSQL_DATABASE --execute \"SELECT COUNT(*) FROM users HAVING COUNT(*) = 4;\""]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 60s
 
   db_mongo:
     build:
