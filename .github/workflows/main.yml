@@ -37,7 +37,7 @@ jobs:
           exit-code: false
 
       - name: Build Mongo image for scanning
-        run: docker build -t mongo-image:1.0.0 -f ./Init/Dockerfile ./mongo
+        run: docker build -t mongo-image:1.0.0 -f ./init/Dockerfile ./mongo
 
       - name: Docker Scout Scan Mongo
         uses: docker/scout-action@v1
