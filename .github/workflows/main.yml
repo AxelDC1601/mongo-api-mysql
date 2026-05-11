@@ -18,7 +18,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build API image for scanning
-        run: docker build -t api-image:1.0.0 -f ./api/Dockerfile ./api
+        run: docker build -t my-api:1.0.0 -f ./api/Dockerfile ./api
 
       - name: Docker Scout Scan API
         uses: docker/scout-action@v1
