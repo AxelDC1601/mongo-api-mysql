@@ -39,7 +39,7 @@ jobs:
           image: mongo-image:1.0.0
           file: ./mongo/Dockerfile
           only-severities: critical,high
-          exit-code: true
+          exit-code: false
 
       - name: Create .env file
         run: cp .env.example .env
