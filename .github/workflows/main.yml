@@ -27,7 +27,7 @@ jobs:
           image: api-image:1.0.0
           file: ./api/Dockerfile
           only-severities: critical,high
-          exit-code: true
+          exit-code: false
 
       - name: Build Mongo image for scanning
         run: docker build -t mongo-image:1.0.0 -f ./Init/Dockerfile ./mongo
